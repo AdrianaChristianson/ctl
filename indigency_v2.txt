@@ -1,0 +1,66 @@
+Title: Public Defense Eligibility Interview
+Author: Adriana Christianson	
+Before: <link rel="stylesheet" type="text/css" href="https://suffolklitlab.org/howto/qna/style/style.css">
+<div id="icon" style="background-size: 110px 99px;background-image: url('https://suffolklitlab.org/howto/qna/images/maxheadroom.gif');"></div>
+<h2 style="text-align:center;">Public Defense Eligibility Interview</h2>
+
+<p><b>This is a <a href="https://www.codingthelaw.org/level/2/#mission_p1">class project</a>. You should not rely on it as a source of legal information!</b></p>
+<p>Hello, I'm sorry you're in need of a lawyer, let's see if you are eligible for public counsel in Maine, which means a lawyer will be available at no cost, or reduced cost, to you
+</p>
+
+After:
+<script>
+function fedpov(house,income,percentage){
+	// Determines if your income is less than or equal to
+	// a percentage of the 2020 federal poverty guidelines
+	// for the contiguous United States. See
+	// https://aspe.hhs.gov/poverty-guidelines
+
+		var line = NaN;
+
+		if (house == 1) {
+			line = 12760;
+		} else if (house == 2) {
+			line = 17240;
+		} else if (house == 3) {
+			line = 21720;
+		} else if (house == 4) {
+			line = 26200;
+		} else if (house == 5) {
+			line = 30680;
+		} else if (house == 6) {
+			line = 35160;
+		} else if (house == 7) {
+			line = 39640;
+		} else if (house == 8) {
+			line = 44120;
+		} else if (house > 8) {
+			line = 44120 + (house-8)*4480;
+		}
+
+		if (income <= (line*(percentage/100))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+</script>
+
+Q(Start): Do you wish to waive your right to public counsel?
+A: Yes
+	Q(1.1):GOTO:ineligible
+A: No
+	Q(1.2):GOTO:house
+
+Q(house): How many people are in your household?
+X:number
+	Q(HHincome): How much income does your household bring in per year in after tax dollars?
+	X:number
+		Q(DoTime): In the event of a conviction, will a sentence of imprisonment be imposed?
+		A[javascript:if (fedpov(getvar('house'),getvar('income'),110)){ GOTO:('eligible') } else { GOTO:('ineleigible') } ]: Yes
+		A: No
+			Q(Crime):GOTO:ineligible
+	
+Q(eligible): Good news, you are eligible for public counsel
+
+Q(ineligible): I'm sorry, you are not eligible for public counsel
